@@ -1,0 +1,50 @@
+{{- if .Values.alertmanager.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/instance: main
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: {{ .Values.alertmanager.version | default .Values.alertmanager.alertmanagerSpec.image.tag }}
+  name: alertmanager-main
+  namespace: {{ template "kube-prometheus.namespace" . }}
+spec:
+  type: "{{ .Values.alertmanager.service.type }}"
+{{- if .Values.alertmanager.service.clusterIP }}
+  clusterIP: {{ .Values.alertmanager.service.clusterIP }}
+{{- end }}
+{{- if .Values.alertmanager.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.alertmanager.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.alertmanager.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.alertmanager.service.loadBalancerIP }}
+{{- end }}
+{{- if .Values.alertmanager.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := .Values.alertmanager.service.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+  {{- end }}
+{{- end }}
+{{- if ne .Values.alertmanager.service.type "ClusterIP" }}
+  externalTrafficPolicy: {{ .Values.alertmanager.service.externalTrafficPolicy }}
+{{- end }}
+  ports:
+  - name: web
+  {{- if eq .Values.alertmanager.service.type "NodePort" }}
+    nodePort: {{ .Values.alertmanager.service.nodePort }}
+  {{- end }}
+    port: 9093
+    targetPort: web
+  - name: reloader-web
+    port: 8080
+    targetPort: reloader-web
+  selector:
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/instance: main
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/part-of: kube-prometheus
+  sessionAffinity: {{ .Values.alertmanager.service.sessionAffinity }}
+{{- end }}

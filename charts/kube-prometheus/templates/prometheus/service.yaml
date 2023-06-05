@@ -1,0 +1,50 @@
+{{- if .Values.prometheus.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: {{ .Values.prometheus.version | default .Values.prometheus.prometheusSpec.image.tag }}
+  name: prometheus-k8s
+  namespace: {{ template "kube-prometheus.namespace" . }}
+spec:
+  type: "{{ .Values.prometheus.service.type }}"
+{{- if .Values.prometheus.service.clusterIP }}
+  clusterIP: {{ .Values.prometheus.service.clusterIP }}
+{{- end }}
+{{- if .Values.prometheus.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.prometheus.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.prometheus.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.prometheus.service.loadBalancerIP }}
+{{- end }}
+{{- if .Values.prometheus.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := .Values.prometheus.service.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+  {{- end }}
+{{- end }}
+{{- if ne .Values.prometheus.service.type "ClusterIP" }}
+  externalTrafficPolicy: {{ .Values.prometheus.service.externalTrafficPolicy }}
+{{- end }}
+  ports:
+  - name: web
+  {{- if eq .Values.prometheus.service.type "NodePort" }}
+    nodePort: {{ .Values.prometheus.service.nodePort }}
+  {{- end }}
+    port: 9090
+    targetPort: web
+  - name: reloader-web
+    port: 8080
+    targetPort: reloader-web
+  selector:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+  sessionAffinity: {{ .Values.prometheus.service.sessionAffinity }}
+{{- end }}

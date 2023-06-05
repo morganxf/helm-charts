@@ -1,0 +1,8 @@
+# Chart dependencies
+/charts/kube-prometheus-stack/crds
+.idea
+.vscode
+.DS_Store
+test.yaml
+
+*.tgz

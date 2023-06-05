@@ -1,0 +1,45 @@
+{{- if .Values.grafana.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: {{ .Values.grafana.version | default .Values.grafana.grafanaSpec.image.tag }}
+  name: grafana
+  namespace: {{ template "kube-prometheus.namespace" . }}
+spec:
+  type: "{{ .Values.grafana.service.type }}"
+{{- if .Values.grafana.service.clusterIP }}
+  clusterIP: {{ .Values.grafana.service.clusterIP }}
+{{- end }}
+{{- if .Values.grafana.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.grafana.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.grafana.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.grafana.service.loadBalancerIP }}
+{{- end }}
+{{- if .Values.grafana.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := .Values.grafana.service.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+  {{- end }}
+{{- end }}
+{{- if ne .Values.grafana.service.type "ClusterIP" }}
+  externalTrafficPolicy: {{ .Values.grafana.service.externalTrafficPolicy }}
+{{- end }}
+  ports:
+    - name: http
+  {{- if eq .Values.grafana.service.type "NodePort" }}
+      nodePort: {{ .Values.grafana.service.nodePort }}
+  {{- end }}
+      port: 3000
+      targetPort: http
+  selector:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: kube-prometheus
+  sessionAffinity: {{ .Values.grafana.service.sessionAffinity }}
+{{- end }}

@@ -1,0 +1,52 @@
+# Default values for prometheus-node-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+##
+namespaceOverride: ""
+
+global:
+  # To help compatibility with other charts which use global.imagePullSecrets.
+  # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
+  # global:
+  #   imagePullSecrets:
+  #   - name: pullSecret1
+  #   - name: pullSecret2
+  # or
+  # global:
+  #   imagePullSecrets:
+  #   - pullSecret1
+  #   - pullSecret2
+  imagePullSecrets: []
+  #
+  # Allow parent charts to override registry hostname
+  imageRegistry: ""
+
+
+image:
+  registry: registry.k8s.io
+  repository: kube-state-metrics/kube-state-metrics
+  # Overrides the image tag whose default is {{ printf "v%s" .Chart.AppVersion }}
+  tag: ""
+  pullPolicy: IfNotPresent
+
+
+# Configure kube-rbac-proxy. When enabled, creates a kube-rbac-proxy to protect the node-exporter http endpoint.
+# The requests are served through the same service but requests are HTTPS.
+kubeRBACProxy:
+  enabled: false
+  image:
+    registry: quay.io
+    repository: brancz/kube-rbac-proxy
+    tag: v0.14.1
+    pullPolicy: IfNotPresent
+
+
+## Assign a nodeSelector if operating a hybrid cluster
+##
+nodeSelector: {}
+
+service:
+  type: ClusterIP
+  nodePort:
+

@@ -1,0 +1,40 @@
+{{- if .Values.alertmanager.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  labels:
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/instance: main
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: {{ .Values.alertmanager.version | default .Values.alertmanager.alertmanagerSpec.image.tag }}
+  name: main
+  namespace: {{ template "kube-prometheus.namespace" . }}
+spec:
+  {{- $registry := .Values.global.imageRegistry | default .Values.alertmanager.alertmanagerSpec.image.registry }}
+  image: "{{ $registry }}/{{ .Values.alertmanager.alertmanagerSpec.image.repository }}:{{ .Values.alertmanager.alertmanagerSpec.image.tag }}"
+{{- if .Values.alertmanager.alertmanagerSpec.nodeSelector }}
+  nodeSelector:
+{{ toYaml .Values.alertmanager.alertmanagerSpec.nodeSelector | indent 4 }}
+{{- end }}
+  paused: {{ .Values.alertmanager.alertmanagerSpec.paused }}
+  logFormat: {{ .Values.alertmanager.alertmanagerSpec.logFormat | quote  }}
+  logLevel:  {{ .Values.alertmanager.alertmanagerSpec.logLevel | quote  }}
+  retention: {{ .Values.alertmanager.alertmanagerSpec.retention | quote  }}
+  podMetadata:
+    labels:
+      app.kubernetes.io/component: alert-router
+      app.kubernetes.io/instance: main
+      app.kubernetes.io/name: alertmanager
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/version: {{ .Values.alertmanager.version | default .Values.alertmanager.alertmanagerSpec.image.tag }}
+  replicas: {{ .Values.alertmanager.alertmanagerSpec.replicas }}
+  resources:
+{{ toYaml .Values.alertmanager.alertmanagerSpec.resources | indent 4 }}
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: alertmanager-main
+  version: {{ .Values.alertmanager.version | default .Values.alertmanager.alertmanagerSpec.image.tag }}
+{{- end }}
