@@ -1,0 +1,91 @@
+apiVersion: v1
+entries:
+  kube-prometheus:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/prometheus-community/helm-charts
+        - name: Upstream Project
+          url: https://github.com/prometheus-operator/kube-prometheus
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: 0.65.2
+    created: "2023-06-08T16:04:12.912862+08:00"
+    description: kube-prometheus collects Kubernetes manifests, Grafana dashboards,
+      and Prometheus rules combined with documentation and scripts to provide easy
+      to operate end-to-end Kubernetes cluster monitoring with Prometheus using the
+      Prometheus Operator.
+    digest: d6aede86c0b996376a4b2f5472d0b529a3726efbb2eb08a90c968cca2ed8f281
+    home: https://github.com/prometheus-operator/kube-prometheus
+    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
+    keywords:
+    - operator
+    - prometheus
+    - kube-prometheus
+    kubeVersion: '>=1.16.0-0'
+    name: kube-prometheus
+    sources:
+    - https://github.com/prometheus-community/helm-charts
+    - https://github.com/prometheus-operator/kube-prometheus
+    type: application
+    urls:
+    - https://morganxf.github.io/helm-charts/kube-prometheus-1.0.0.tgz
+    version: 1.0.0
+  kube-state-metrics:
+  - apiVersion: v2
+    appVersion: 2.9.2
+    created: "2023-06-08T16:04:12.91333+08:00"
+    description: Install kube-state-metrics to generate and expose cluster-level metrics
+    digest: 1c7c3d487cf164db82ba4bc119918f43d732bb4013b38e2eed0f41a461c2818e
+    home: https://github.com/kubernetes/kube-state-metrics/
+    keywords:
+    - metric
+    - monitoring
+    - prometheus
+    - kubernetes
+    name: kube-state-metrics
+    sources:
+    - https://github.com/kubernetes/kube-state-metrics/
+    type: application
+    urls:
+    - https://morganxf.github.io/helm-charts/kube-state-metrics-1.0.0.tgz
+    version: 1.0.0
+  prometheus-blackbox-exporter:
+  - apiVersion: v2
+    appVersion: 0.24.0
+    created: "2023-06-08T16:04:12.913809+08:00"
+    description: Prometheus Blackbox Exporter
+    digest: 70ec5aa4acf6c01641677d74a89aa3350d049155dfb0a2cc8d05a2b4d1c01187
+    home: https://github.com/prometheus/blackbox_exporter
+    keywords:
+    - prometheus
+    - blackbox
+    - monitoring
+    name: prometheus-blackbox-exporter
+    sources:
+    - https://github.com/prometheus/blackbox_exporter
+    - https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-blackbox-exporter
+    type: application
+    urls:
+    - https://morganxf.github.io/helm-charts/prometheus-blackbox-exporter-1.0.0.tgz
+    version: 1.0.0
+  prometheus-node-exporter:
+  - apiVersion: v2
+    appVersion: 1.6.0
+    created: "2023-06-08T16:04:12.914248+08:00"
+    description: A Helm chart for prometheus node-exporter
+    digest: 041267e0af6d075b944536a26c87cda7c047cf798f02a9ad990e4b5450c2314d
+    home: https://github.com/prometheus/node_exporter/
+    keywords:
+    - node-exporter
+    - prometheus
+    - exporter
+    name: prometheus-node-exporter
+    sources:
+    - https://github.com/prometheus/node_exporter/
+    type: application
+    urls:
+    - https://morganxf.github.io/helm-charts/prometheus-node-exporter-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-06-08T16:04:12.902224+08:00"
